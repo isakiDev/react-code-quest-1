@@ -1,37 +1,45 @@
-// import { useEffect } from 'react'
+import { useEffect } from 'react'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
-// import { Toaster } from 'sonner'
+import { Toaster } from 'sonner'
 
 import { router } from './common/router/app.router'
-// import { postsRouter } from './posts'
-// import { AUTH_STATUS } from './consts'
-// import { useAuth } from './auth'
-// import { Spinner } from './ui/components'
-// import { authRouter } from './auth'
+import { useAuth } from './auth'
+import { adminRouter } from './admin'
+import { AUTH_STATUS } from './const'
+import { Spinner } from './common'
 
 export const App = () => {
-  // const { userStatus, onCheckAuthToken } = useAuth()
+  const { onCheckAuthToken, onCheckCodeToken, user, status, onLogout } = useAuth()
 
-  // useEffect(() => {
-  //   onCheckAuthToken()
-  // }, [])
+  useEffect(() => {
+    const token = window.localStorage.getItem('TOKEN')
 
-  // if (userStatus === AUTH_STATUS.CHECKING) {
-  //   return <Spinner />
-  // }
+    if (token) {
+      onCheckAuthToken(token)
+    }
+    else {
+      const searchParams = new URLSearchParams(window.location.search);
+      const codeParam = searchParams.get('code');
 
-  // const checkRouter = userStatus === AUTH_STATUS.AUTHENTICATED
-  //   ? createBrowserRouter(postsRouter)
-  //   : createBrowserRouter(router)
+      if (codeParam) {
+        onCheckCodeToken(codeParam)
+      } else {
+        onLogout()
+      }
+    }
+  }, [])
 
-  const routerNav = createBrowserRouter(router)
+  if (status === AUTH_STATUS.CHECKING) return <Spinner />
+
+  const checkRouter = user?.roles.includes('admin')
+    ? createBrowserRouter(adminRouter)
+    : createBrowserRouter(router)
 
   return (
     <>
-      {/* <Toaster /> */}
-      {/* <RouterProvider router={checkRouter} /> */}
-      <RouterProvider router={routerNav} />
+      <Toaster />
+      <RouterProvider router={checkRouter} />
     </>
   )
 }
