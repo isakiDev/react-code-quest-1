@@ -1,4 +1,5 @@
 export * from './components/Dashboard'
+export * from './components/CardDrawAdmin'
 
 export * from './pages/DrawsAdminPage'
 

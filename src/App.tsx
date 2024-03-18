@@ -17,8 +17,7 @@ export const App = () => {
 
     if (token) {
       onCheckAuthToken(token)
-    }
-    else {
+    } else {
       const searchParams = new URLSearchParams(window.location.search);
       const codeParam = searchParams.get('code');
 

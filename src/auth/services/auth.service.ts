@@ -40,9 +40,9 @@ export const getAccessToken = async (code: string) => {
     handleErrorExepcion(data)
   }
 
-  const { access_token: acessToken } = await resp.json() as AccessTokenResponse
+  const { access_token: accessToken } = await resp.json() as AccessTokenResponse
 
-  const respProfile = await fetch(`${API_URL}/auth/discord/me?accessToken=${acessToken}`)
+  const respProfile = await fetch(`${API_URL}/auth/discord/me?accessToken=${accessToken}`)
 
   if (!respProfile.ok) {
     const data = await resp.json() as ErrorResponse
